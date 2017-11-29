@@ -1,0 +1,40 @@
+
+Impression au fablab sur XORTRAX M200 avec du fil Z-ULTRAT le 2 novembre
+
+epaule
+Humerus
+coude
+radius
+cheville
+pied
+
+les os sont creux
+le jeu est de 0.25mm
+
+la modelistaion est sous openscad
+
+Lors de la mise à l'échelle 1/2, le jeu dans le coude et la cheville s'avère insuffisant à proximité de l'axe de rotation. 
+Il était prévu de 0.5mm, il a donc été imprimé à 0.25  
+Par contre le principe d'imprimer directement les articulations assemblées est validé.
+
+Il faut prévoir aux deux extrémités du pied des dépassements de largeur ainsi la pièces se pose naturellement sur une surface plane.
+	
+En résumé, les améliorations : 
+- préserver 0.5mm de jeu, quelquesoit la mise à l'échelle
+- 2 extremités au pied
+
+nouveauté : 
+- finaliser le passage des fils de capteurs
+- 
+
+
+
+Il faut prévoir deux extractions STL,
+
+- une pour impression en 3D sous forme d'un assemblage
+- une autre sous forme de pièces détachées pour les manipuler dans blender pui unity.
+Pour unity il faut prendre soin de mettre l'axe de rotation au point zéro
+et auparavant passser dans blender pour pobtenir un format collada
+
+
+ 
