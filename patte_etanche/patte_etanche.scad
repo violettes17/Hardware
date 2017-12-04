@@ -4,7 +4,7 @@
 // 15 nov 2017 : humerus, axe cylindre D6 sur l'interieur du coude, avec bague circlip
 // 15 nov 2017 : radius, axe cylindre D6 sur l'interieur du coude, avec bague circlip 
 // 15 nov 2017 : toutes les pièces, fermeture des articulations
-
+// 29 nov 2017 : erreur jeu tore corrigée : nouvelle fct tore_plein_negatif
 
 dollarFN = 40;
 
@@ -100,12 +100,6 @@ module coude_male(rayon)    // partie basse de l'humerus
     }
 
 
-module coude_male_negatif(rayon)  // emporte pièce pour raboter l'extremité basse du du corps long de l'humerus
-{
-    translate([rayon,0,0]){sphere(r = rayon, $fn = dollarFN);};
-    translate([-rayon,0,0]) {sphere(r = rayon, $fn = dollarFN);};
-    }
-
 module cheville_male(rayon)    // osselet cheville
 {
     translate([rayon/2,0,0]){sphere(r = rayon, $fn = dollarFN);};
@@ -130,6 +124,16 @@ module tore(rayon)
 module tore_plein(rayon)
 {
     rayon_tore = 3;
+    // tore pour fermer l'articulation
+    rotate([90,90,90]) rotate_extrude () 
+    {translate([rayon,0,0]) circle (rayon_tore, $fn=dollarFN);
+    translate([rayon_tore/2,0,0]) square(rayon_tore);    
+        };
+    }
+
+module tore_plein_negatif(rayon,jeu)
+{
+    rayon_tore = 3+jeu;
     // tore pour fermer l'articulation
     rotate([90,90,90]) rotate_extrude () 
     {translate([rayon,0,0]) circle (rayon_tore, $fn=dollarFN);
@@ -229,14 +233,12 @@ module humerus(longueur, largeur)    // longueur largeur exprimées en millimèt
     ratio_os_creux = (sqrt(2)*31/2 + 4)/42;
     ratio_tete = 33/112/2;
     ratio_coude = 21/112/2;
-    ratio_coude_negatif =3/4;
     epaisseur_peau = 2;
     jeu = 0.5;
     difference(){
     corps_long(longueur, largeur, ratio_os_creux);
-    //translate([0,0,longueur*(1-0.95*ratio_coude_negatif*ratio_coude)]) rotate([0,0,90]) {coude_male_negatif(rayon = longueur * ratio_coude *ratio_coude_negatif);};   // supprimé le 15/11
-     
-    translate([0,0,longueur]) tore_plein(rayon = 3*rayon_coude/2+epaisseur_peau-rayon_tore+jeu);   };  // tore pour fermer l'articulation    
+         
+    translate([0,0,longueur]) tore_plein_negatif(rayon = 3*rayon_coude/2+epaisseur_peau-rayon_tore,jeu = jeu);   };  // tore pour fermer l'articulation    
     
     tete_male(rayon = longueur * ratio_tete );
     translate([0,0,longueur]) coude_male(rayon = longueur * ratio_coude);
@@ -249,15 +251,22 @@ module radius(longueur, largeur, longueur_humerus)    // longueur largeur exprim
     ratio_coude = 21/112/2;
     ratio_coude_negatif =3/4;
     angle_coude = -42;  //en degré
-    
-    difference(){
-    corps_long(longueur, largeur, ratio_os_creux);
-    translate([0,0,-0.1]) coude_femelle_negatif(rayon= longueur_humerus * ratio_coude);// tendance à laisser une face de l'os corrigée par ce 0.1
-    translate([0,0,longueur+longueur_humerus * ratio_coude + 0.1]) rotate ([180,0,0]) coude_femelle_negatif(rayon= longueur_humerus * ratio_coude);// tendance à laisser une face de l'os corrigée par ce 0.1   
+    jeu = 0.5;
+    difference()
+    {
+    union(){
+        difference(){
+        corps_long(longueur, largeur, ratio_os_creux);
+        translate([0,0,-0.1]) coude_femelle_negatif(rayon= longueur_humerus * ratio_coude);// tendance à laisser une face de l'os corrigée par ce 0.1
+        translate([0,0,longueur+longueur_humerus * ratio_coude + 0.1]) rotate ([180,0,0]) coude_femelle_negatif(rayon= longueur_humerus * ratio_coude);// tendance à laisser une face de l'os corrigée par ce 0.1   
+            };
+        
+        translate([0,0,0]) rotate ([angle_coude,0,0]) coude_femelle(rayon = longueur_humerus * ratio_coude);  // c'est le coude
+        translate([0,0,longueur+longueur_humerus * ratio_coude]) rotate ([180,0,0]) coude_femelle(rayon = longueur_humerus * ratio_coude);    // c'est la cheville
         };
-    
-    translate([0,0,0]) rotate ([angle_coude,0,0]) coude_femelle(rayon = longueur_humerus * ratio_coude);  // c'est le coude
-    translate([0,0,longueur+longueur_humerus * ratio_coude]) rotate ([180,0,0]) coude_femelle(rayon = longueur_humerus * ratio_coude);    // c'est la cheville
+     coupleur_coude(rayon = rayon_coupleur_coude + jeu , longueur = longueur_coupleur_coude);  };//29 novembre 2017   
+   
+        
 }
 
 module cubitus(longueur, largeur, longueur_humerus, longueur_radius)    // longueur largeur exprimées en millimètres
@@ -407,9 +416,9 @@ difference(){
     // et encore rajouter les minkowski qui débordent de rayon/10 a améliorer donc ajustement
     ajustementX_moteur = 3;
     ajustementX_servo = 3;
-translate([Xplus_epaulement+rayon_roue_moteur/4+ajustementX_moteur,jansen_m,0]) roue_moteur(rayon = rayon_roue_moteur);
+//translate([Xplus_epaulement+rayon_roue_moteur/4+ajustementX_moteur,jansen_m,0]) roue_moteur(rayon = rayon_roue_moteur);
 
-translate([Xplus_epaulement+rayon_roue_moteur/4+ajustementX_servo,-jansen_a,0]) roue_servo(rayon = rayon_roue_moteur);
+//translate([Xplus_epaulement+rayon_roue_moteur/4+ajustementX_servo,-jansen_a,0]) roue_servo(rayon = rayon_roue_moteur);
     
 //import("humerus.stl", convexity=3);
 //import("radius_cubitus.stl", convexity=3);

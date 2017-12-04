@@ -1,0 +1,38 @@
+﻿Cyril ROUDOT 3 décembre 2017
+Cet essai est réalisé avec une caméra achetée sur Amazon . 
+nommée "SainSmart Wide Angle Fish-Eyes for Raspberry PI arduino
+
+Les distances indiquées sont entre l'extrémité de l'objectif et l'objet photographié à plat.
+
+
+Eclairage indirect constant 100 watt parapluie Elinchrome à un mètre environ.
+
+Photos lentille d'origine, sans Focus: 
+
+- init :  lentille collée en usine. photos réalisées à 1,2,3,5,10,11 centimètres
+- screw : lentille vissée CW à fond. photos réalisées à 1,2,3,5,7,11 centimètres
+- unscrew : lentille dévissée CW à fond. photos réalisées à 0.4,1,3,5,7,11 centimètres
+
+Photos lentille d'origine, avec Focus manuel: 
+
+ - good11 : focus réglé à 11 centimètres, 5 photos réalisées à 1,3,5,7,11 centimètres
+ - good5 : focus réglé à 5 centimètres, photos réalisées à 1,3,5,7,9,11 centimètres
+ - good3 : focus réglé à 3 centimètres, 6 photos réalisées à 1,3,5,7,9,11 centimètres
+ - good1 : focus réglé à 1 centimètres, 6 photos réalisées à 0.5,1,3,5,7,11 centimètres
+
+Photos lentille 32220, avec Focus manuel: 
+
+ - good11_32220 : focus réglé à 11 centimètres, 6 photos réalisées à 0.5,1,3,5,7,11 centimètres
+ - good05_32220 : focus réglé à 5 centimètres, 6 photos réalisées à 0.5,1,3,5,7,11 centimètres
+
+Photos lentille 25180, avec Focus manuel: 
+
+ - good11_25180 : focus réglé à 11 centimètres, 6 photos réalisées à 0.5,1,3,5,7,11 centimètres
+ - good5_25180 : focus réglé à 5 centimètres, 6 photos réalisées à 0.5,1,3,5,7,11 centimètres
+
+Photos lentille 30180, avec Focus manuel: 
+
+ - good11_30180 : focus réglé à 11 centimètres, 5 photos réalisées à 1,3,5,7,11 centimètres
+ - good5_30180 : focus réglé à 5 centimètres, 6 photos réalisées à 1,3,5,7,11 centimètres
+
+spistill Camera App v1.3.11Width 2592, Height 1944, quality 85, filename (null)Time delay 5000, Raw noThumbnail enabled Yes, width 64, height 48, quality 35Link to latest frame e nabled  noFull resolution preview NoCapture method : Single capturePreview Yes, Full screen YesPreview win dow 0,0,1024,768Opacity 255Sharpness 0, Contrast 0, Brightness 50Saturation 0, ISO 0, Video Stabilisation No, Exposure compensation 0Exposure Mode 'auto', AWB Mode 'auto', Image Effect 'none'Flicker Avoid Mode 'o ff'Metering Mode 'average', Colour Effect Enabled No with U = 128, V = 128Rotation 0, hflip No, vflip NoRO I x 0.000000, y 0.000000, w 1.000000 h 1.000000Camera component doneEncoder component done"
