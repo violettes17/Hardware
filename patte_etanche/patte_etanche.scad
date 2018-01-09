@@ -5,7 +5,7 @@
 // 15 nov 2017 : radius, axe cylindre D6 sur l'interieur du coude, avec bague circlip 
 // 15 nov 2017 : toutes les pièces, fermeture des articulations
 // 29 nov 2017 : erreur jeu tore corrigée : nouvelle fct tore_plein_negatif
-
+// 8 déc 2017 : le coude comporte deux anneaux fermés et un tore (coude_femelle)
 dollarFN = 40;
 
 $fn = dollarFN;
@@ -137,7 +137,7 @@ module tore_plein_negatif(rayon,jeu)
     // tore pour fermer l'articulation
     rotate([90,90,90]) rotate_extrude () 
     {translate([rayon,0,0]) circle (rayon_tore, $fn=dollarFN);
-    translate([rayon_tore/2,0,0]) square(rayon_tore);    
+    //translate([rayon_tore/2,0,0]) square(rayon_tore);    
         };
     }
 
@@ -159,7 +159,7 @@ module coude_femelle(rayon)   // partie haute du radius
                    difference() {
                             
                             sphere(r = 3*rayon/2+epaisseur_peau, $fn = dollarFN);
-                            translate([0,0,-2.5*rayon]) cube(5*rayon, center = true );                 };
+                            translate([0,0,-2.5*rayon]) cube([2*rayon,5*rayon,5*rayon], center = true );                 };
                    tore(rayon = 3*rayon/2+epaisseur_peau-rayon_tore);     // tore pour fermer l'articulation
                    };
                    union() {translate([rayon/2,0,0]){sphere(r = rayon + jeu , $fn = dollarFN);};
@@ -251,6 +251,7 @@ module radius(longueur, largeur, longueur_humerus)    // longueur largeur exprim
     ratio_coude = 21/112/2;
     ratio_coude_negatif =3/4;
     angle_coude = -42;  //en degré
+    angle_pliage = 15;  //en degré
     jeu = 0.5;
     difference()
     {
@@ -258,13 +259,27 @@ module radius(longueur, largeur, longueur_humerus)    // longueur largeur exprim
         difference(){
         corps_long(longueur, largeur, ratio_os_creux);
         translate([0,0,-0.1]) coude_femelle_negatif(rayon= longueur_humerus * ratio_coude);// tendance à laisser une face de l'os corrigée par ce 0.1
-        translate([0,0,longueur+longueur_humerus * ratio_coude + 0.1]) rotate ([180,0,0]) coude_femelle_negatif(rayon= longueur_humerus * ratio_coude);// tendance à laisser une face de l'os corrigée par ce 0.1   
-            };
+            rayon_coude=longueur_humerus * ratio_coude;
+        translate([0,0,longueur+longueur_humerus * ratio_coude + 0.1])
+            rotate ([180,0,0]) coude_femelle_negatif(rayon= longueur_humerus * ratio_coude);// tendance à laisser une face de l'os corrigée par ce 0.1
+         
+            
+            }; 
+    
+    
         
         translate([0,0,0]) rotate ([angle_coude,0,0]) coude_femelle(rayon = longueur_humerus * ratio_coude);  // c'est le coude
         translate([0,0,longueur+longueur_humerus * ratio_coude]) rotate ([180,0,0]) coude_femelle(rayon = longueur_humerus * ratio_coude);    // c'est la cheville
         };
-     coupleur_coude(rayon = rayon_coupleur_coude + jeu , longueur = longueur_coupleur_coude);  };//29 novembre 2017   
+     coupleur_coude(rayon = rayon_coupleur_coude + jeu , longueur = longueur_coupleur_coude);
+     
+     difference(){   
+     rotate ([angle_pliage,0,0]) translate([0,0,longueur/2]) cube([largeur+2*jeu,largeur+2*jeu,longueur], center = true );//  8DEC2017 emporte piece pour pouvoir plier le coude a plus de 100deg : 165 environ   
+     epaisseur_peau = 2;
+     rayon_tore = 3;    
+     tore(3*rayon_coude/2+epaisseur_peau-rayon_tore);// conserver le tore donc  ... soustraire de l'emporte pièce
+         };
+    };  
    
         
 }
@@ -272,12 +287,16 @@ module radius(longueur, largeur, longueur_humerus)    // longueur largeur exprim
 module cubitus(longueur, largeur, longueur_humerus, longueur_radius)    // longueur largeur exprimées en millimètres
 {
     jeu = 0.5;
+    angle_pliage = 15;  //en degré
     // pour avoir rotation autour de l'axe du coude, le corps_long du cubitus est crée symétriquement, roté, puis emputé de la moitié à l'aide d'un cube emporte pièce roté également. 
     translate([0,0,0])  difference()
             {rotate([15,0,0]) translate([0,0,0]) duocylinder(hauteur = longueur, rayon = rayon_ext_coude);
             translate([0,0,0]) rotate ([180,0,0]) coude_male(rayon = jeu + longueur_humerus * ratio_coude);
             rotate([15,0,0])  {translate ([0,-2*rayon_ext_coude,0]) cube([rayon_ext_coude+10+2*longueur_coupleur_coude,rayon_ext_coude+10,longueur+10],center = true);};  // cube emporte pièce
-                
+
+    rotate ([angle_pliage,0,0]) translate([0,0,longueur/2]) cube([largeur+2*jeu,largeur+2*jeu,longueur], center = true );//  8DEC2017 emporte piece pour pouvoir plier le coude a plus de 100deg : 165 environ   
+
+            
                 };   
 }
 
@@ -286,15 +305,18 @@ module cheville(longueur, largeur, longueur_humerus)    // longueur largeur expr
 {
     epaisseur_peau = 2;
     jeu = 0.5;
+    rayon_tore = 3;
     difference()
     {
         union()
         {
+        corps_long(longueur, largeur, ratio_os_creux);    
         translate([0,0,0]) cheville_male(rayon = longueur_humerus * ratio_coude) ;  
         translate([0,0,longueur]) rotate ([180,0,0]) cheville_male(rayon = longueur_humerus * ratio_coude) ;  
         };
-        
-        translate([0,0,0*longueur]) tore_plein(rayon = 3*rayon_coude/2+epaisseur_peau-rayon_tore+jeu);   };  // tore pour fermer l'articulation    
+         translate([0,0,0*longueur]) tore_plein_negatif(rayon = 3*rayon_coude/2+epaisseur_peau-rayon_tore,jeu = jeu);     // tore pour fermer l'articulation    
+        translate([0,0,longueur]) tore_plein_negatif(rayon = 3*rayon_coude/2+epaisseur_peau-rayon_tore,jeu = jeu);  
+        };  // tore pour fermer l'articulation
 
 }
 
@@ -303,7 +325,7 @@ module pied(longueur, largeur, longueur_humerus)    // longueur largeur exprimé
 {
 
 
-    translate([0,0,0]) cheville_femelle(rayon = longueur_humerus * ratio_coude) ;
+    translate([0,0,0]) coude_femelle(rayon = longueur_humerus * ratio_coude) ;   // 8dec2017 Cheville femelle abandonné contre coude_femelle
     difference(){ 
         translate([0,23,largeur/2]) { rotate ([90,0,0]) corps_long(longueur, largeur, ratio_os_creux);}; //longueur_pied = 23+54 ;23 derrière la cheville, 54 devant
         translate([0,0,0]) cheville_femelle_negatif(rayon = longueur_humerus * ratio_coude) ;    
@@ -374,8 +396,8 @@ L_humerus = 112 * herisson_echelle;
 largeur_humerus =19 * herisson_echelle;
 L_radius = 140 * herisson_echelle;
 L_cubitus = 2 * (184-140) * herisson_echelle;    // la longueur du cubitus est deux fois l'extrémité à axe du coude
-L_cheville = 16* herisson_echelle;
-longueur_pied = 23+54 * herisson_echelle; // 23 derrière la cheville, 54 devant
+L_cheville = 40* herisson_echelle;    // la longueur de 16 de l'agneau est abandonnée, trop contrainte pour les tores
+longueur_pied = (23+54) * herisson_echelle; // 23 derrière la cheville, 54 devant
 rayon_ext_coude = L_humerus * ratio_coude *(3/2) * herisson_echelle;
 rayon_coude = L_humerus * ratio_coude  ; 
 rayon_coupleur_tete = 6;
@@ -400,9 +422,9 @@ difference(){
         translate([0,0,L_humerus ]) cubitus(longueur = L_cubitus, largeur = largeur_humerus, longueur_humerus = L_humerus, longueur_radius = L_radius );   //  Le rayon du coude du coude est proportionnel à la longueur de l'humerus.
          
           
-        //translate([0,0,L_humerus +L_radius+L_humerus * ratio_coude]) cheville(longueur = L_cheville, largeur = largeur_humerus, longueur_humerus = L_humerus );// le rayon de la cheville est proportionnel à la longueur de l'humerus
+        translate([0,0,L_humerus +L_radius+L_humerus * ratio_coude]) cheville(longueur = L_cheville, largeur = largeur_humerus, longueur_humerus = L_humerus );// le rayon de la cheville est proportionnel à la longueur de l'humerus
 
-       // translate([0,0,L_humerus+L_radius+L_humerus * ratio_coude+L_cheville]) rotate([0,0,180]) pied(longueur = longueur_pied, largeur = largeur_humerus, longueur_humerus = L_humerus);// le rayon de la cheville est proportionnel à la longueur de l'humerus
+       translate([0,0,L_humerus+L_radius+L_humerus * ratio_coude+L_cheville]) rotate([0,0,180]) pied(longueur = longueur_pied, largeur = largeur_humerus, longueur_humerus = L_humerus);// le rayon de la cheville est proportionnel à la longueur de l'humerus
       };
 //passe_fil();
         

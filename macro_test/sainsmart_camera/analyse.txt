@@ -1,0 +1,42 @@
+Lentille d'origine :   BIEN SI REGLEE
+Le réglage initial de la camera sainsmart ne délivre pas des images nette à 11 cm et moins.
+Avec un réglage aux extrémités,Toutes les images sont floues de 0.5 à 11 cm.
+Avec le focus réalisé à 11 cm, la netteté est bonne de 5 cm  à 19 cm(le fond du meuble est 8 cm plus bas que la revue)
+Avec le focus réalisé à 5 cm, la netteté est bonne de 3 cm  à 7 cm. 
+Avec le focus réalisé à 3 cm, la netteté est bonne de 3 cm  à 6 cm
+Avec le focus réalisé à 1 cm, la netteté est bonne de 0.5 cm  à 1 cm
+L'image embrasse 13cm de hauteur (largeur x 4/3) à 5cm de l'objet.
+L'image embrasse 16cm de hauteur (largeur x 4/3) à 11cm de l'objet.
+La règle est déformée de 10% à 11cm de l'objet
+
+
+Lentille 32220 : 11 euros    TRES BIEN
+Avec le focus réalisé à 11 cm, la netteté est bonne de 1 cm  plus de 30 cm
+Avec le focus réalisé à 5 cm, la netteté n'est pas meilleure
+L'image Embrasse plus de 3mètres  de hauteur (largeur x 4/3) à 11cm de l'objet.
+La règle est très peu déformée (3%) car  au centre de l'image à 11 cm de l'objet.
+La règle est déformée de 20% à 5cm de l'objet car elle n'est pas au centre de l'image.
+L'image est occultée par un diaphragme rond.  (peut être pratique)
+
+
+lentille 25180 : 23 euros   BIEN
+Avec le focus réalisé à 11 cm, la netteté est bonne de 5 cm  à 19 cm(le fond du meuble est 8 cm plus bas que la revue)
+Avec le focus réalisé à 5 cm, la netteté est bonne de 5 cm  à 12 cm.  	
+La règle est déformée de 10% à 5cm de l'objet
+La règle est déformée de 5% à 11cm de l'objet
+L'image embrasse 22cm de hauteur (largeur x 4/3) à 5cm de l'objet.
+L'image embrasse 28cm de hauteur (largeur x 4/3) à 11cm de l'objet.
+
+lentille 30180 : 11 euros BIEN
+Avec le focus réalisé à 11 cm, la netteté est bonne de 7 cm  à 17 cm(le fond du meuble est 8 cm plus bas que la revue)
+Avec le focus réalisé à 5 cm, la netteté est bonne de 3 cm  à 11 cm.
+La règle est déformée de 15% à 5cm de l'objet
+La règle est déformée de 5% à 11cm de l'objet
+L'image embrasse 22cm de hauteur (largeur x 4/3) à 5cm de l'objet.
+L'image embrasse 28cm de hauteur (largeur x 4/3) à 11cm de l'objet.
+
+OV5647 Camera Board /w M12x0.5 mount LS-40180 Fisheye Lens for Raspberry Pi		B0055	1	€26.73
+LS-30180 185 Degree Wide Angle HD Fish Eye IP65 Lens for Arduino Raspberry Pi camera	U5820	1	€11.05
+LS-25180 1.6mm Focal Length M12xP0.5 Fish Eye Camera Lens				U1019	1	€23.04
+LS-32220 220 Degree Wide Angle Fish Eye Lens for Raspberry Pi Camera Board		U6030	1	€11.06
+
