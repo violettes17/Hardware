@@ -6,6 +6,8 @@
 // 15 nov 2017 : toutes les pièces, fermeture des articulations
 // 29 nov 2017 : erreur jeu tore corrigée : nouvelle fct tore_plein_negatif
 // 8 déc 2017 : le coude comporte deux anneaux fermés et un tore (coude_femelle)
+// 28 jan 2018 : suppression du creux dans le radius
+// 28 jan 2018 : remplacement des circlips par des chevilles
 dollarFN = 40;
 
 $fn = dollarFN;
@@ -35,18 +37,7 @@ module duocylinder(hauteur, rayon)    // corps long du cubitus
     }
 
 
-module circlip_ext_negatif(rayon_gorge)
-    {    // c'est une pièce que est soustraite à un axe de coupleur pour former une gorge periphérique  de l'epaisseur du circlip
-        rotate([90,90,90]){
-            degagement_au_dessus_gorge = 5;
-            epaisseur_circlip = 1;
-            difference() {
-            cylinder(h=epaisseur_circlip, r=rayon_gorge+degagement_au_dessus_gorge, center=true,$fn = dollarFN);
-            cylinder(h=epaisseur_circlip, r=rayon_gorge, center=true,$fn = dollarFN);
-            };
-            }
-        }
-        
+       
 /*module coupleur_tete(rayon, longueur)
     {
      
@@ -56,29 +47,16 @@ module circlip_ext_negatif(rayon_gorge)
 
 module coupleur_tete(rayon, longueur)
     {
-    epaulement_apres_circlip = 3;
-    profondeur_gorge_circlip = 1;    
-    difference(){     // soustraction d'un cylindre et d'un anneau de circlip 
-        translate([longueur/2,0,0]) rotate([90,90,90]){cylinder(h=longueur, r=rayon, center=true,$fn = dollarFN);};
-        translate([longueur-epaulement_apres_circlip,0,0]) circlip_ext_negatif(rayon_gorge=rayon-profondeur_gorge_circlip);
-    };
-    // enlever le commentaire suivant pour faire apparaitre le circlip
-    //translate([longueur-epaulement_apres_circlip,0,0]) circlip_ext_negatif(rayon_gorge=rayon-profondeur_gorge_circlip);
-    
+       
+    translate([longueur/2,0,0]) rotate([90,90,90]){cylinder(h=longueur, r=rayon, center=true,$fn = dollarFN);};
+        
     //  réaliser l'epaulement de la roue moteur
      translate([longueur/2,0,0]) rotate([90,90,90]){smoothcylinder(rayon+1);};  // la hauteur de ce cylinder est rayon/2
     }
         
 module coupleur_coude(rayon, longueur)
     {
-    epaulement_apres_circlip = 3;
-    profondeur_gorge_circlip = 1;    
-    difference(){     // soustraction d'un cylindre et d'un anneau de circlip 
-        translate([longueur/2,0,0]) rotate([90,90,90]){cylinder(h=longueur, r=rayon, center=true,$fn = dollarFN);};
-        translate([longueur-epaulement_apres_circlip,0,0]) circlip_ext_negatif(rayon_gorge=rayon-profondeur_gorge_circlip);
-    };
-    // enlever le commentaire suivant pour faire apparaitre le circlip
-    //translate([longueur-epaulement_apres_circlip,0,0]) circlip_ext_negatif(rayon_gorge=rayon-profondeur_gorge_circlip);
+    translate([longueur/2,0,0]) rotate([90,90,90]){cylinder(h=longueur, r=rayon, center=true,$fn = dollarFN);};
     
     //  réaliser un epaulement de biele
      translate([longueur/2,0,0]) rotate([90,90,90]){smoothcylinder(rayon+1);};  // la hauteur de ce cylinder est rayon/2
@@ -219,10 +197,10 @@ module corps_long(longueur, largeur, ratio_os_creux) // partie longue des os
             {
                     intersection()
                     {
-                    cylinder(h=longueur,r=largeur * ratio_os_creux, center = true);
+                    cylinder(h=longueur,r=largeur * ratio_os_creux, center = true);  
                     cube([largeur,largeur,longueur], center = true);
                     };
-                    cylinder(h=longueur,r=largeur * 14/42, center = true);
+                    //cylinder(h=longueur,r=largeur * 14/42, center = true);
             }
     };
 }
@@ -257,7 +235,7 @@ module radius(longueur, largeur, longueur_humerus)    // longueur largeur exprim
     {
     union(){
         difference(){
-        corps_long(longueur, largeur, ratio_os_creux);
+        corps_long(longueur, largeur, ratio_os_creux);  
         translate([0,0,-0.1]) coude_femelle_negatif(rayon= longueur_humerus * ratio_coude);// tendance à laisser une face de l'os corrigée par ce 0.1
             rayon_coude=longueur_humerus * ratio_coude;
         translate([0,0,longueur+longueur_humerus * ratio_coude + 0.1])
@@ -357,7 +335,26 @@ difference() {
             
             }
 
-
+module bielle(r_axes,longueur, epaisseur)
+    {
+       jeu = 0.5;
+       epaisseur_mini = 2; 
+    difference()
+   {
+                
+        hull()
+        {
+        translate([0,0,0]) rotate([90,90,90]) cylinder(h=epaisseur, r=r_axes+epaisseur_mini, center=true,$fn = dollarFN);
+        translate([0,longueur,0]) rotate([90,90,90])cylinder(h=epaisseur, r=r_axes+epaisseur_mini, center=true,$fn = dollarFN);
+        };
+        
+       union()
+       {
+        translate([0,0,0]) rotate([90,90,90]) cylinder(h=epaisseur*2, r=r_axes+jeu, center=true,$fn = dollarFN);
+        translate([0,longueur,0]) rotate([90,90,90]) cylinder(h=epaisseur*2, r=r_axes+jeu, center=true,$fn = dollarFN);     
+       };         
+                };
+            }
 
 module roue_servo(rayon)
         {
@@ -382,6 +379,26 @@ difference() {
             
             }
 
+module jansen_b_d()   //  servo
+    {
+translate([planX2-8+longueur_coupleur_coude,jansen_a-jansen_m,-jansen_n]) bielle(r_axes = rayon_coupleur_coude ,longueur = jansen_d , epaisseur = epaisseur_bielle_coude);
+translate([planX2-8+longueur_coupleur_coude,jansen_a-jansen_m,-jansen_n]) rotate([-90,0,0]) bielle(r_axes = rayon_coupleur_coude ,longueur = jansen_b , epaisseur = epaisseur_bielle_coude);
+//translate([planX2,jansen_a-jansen_m,-jansen_n]) rotate([140,0,0]) bielle(r_axes = rayon_coupleur_coude ,longueur = jansen_c , epaisseur = epaisseur_bielle_coude);
+    }
+    
+module jansen_c()//bielle coude    
+{translate([planX2,0,L_humerus]) bielle(r_axes = rayon_coupleur_coude ,longueur = jansen_c , epaisseur = epaisseur_bielle_coude);
+}
+module jansen_f() //jansen_f
+
+    {translate([planX2,jansen_f,L_humerus/2]) bielle(r_axes = rayon_coupleur_coude ,longueur = jansen_f , epaisseur = epaisseur_bielle_coude);
+    }
+
+module jansen_j()  //bielle jansen_j 
+
+{
+translate([planX2,-jansen_j,0]) bielle(r_axes = rayon_coupleur_tete ,longueur = jansen_j , epaisseur = epaisseur_bielle_coude);
+}
 
 
 ratio_os_creux = (sqrt(2)*31/2 + 4)/42;
@@ -408,43 +425,81 @@ rayon_tore = 3;
 echelle_jansen = 25/15;
 jansen_a = 38 * echelle_jansen;
 jansen_b = 41.5 * echelle_jansen;
+jansen_c = 39.3 * echelle_jansen;
 jansen_d = 40.1 * echelle_jansen;
+jansen_f = 40.1 * echelle_jansen;
+jansen_j = 50.0 * echelle_jansen;
 jansen_m = 15 * echelle_jansen;
+jansen_n = 7.8 * echelle_jansen;
 souplesse = 5;
 rayon_roue_moteur = jansen_m + rayon_coupleur_coude + souplesse;
-//humerus, radius, cheville, pied : 
-difference(){
- union(){
-        humerus(longueur = L_humerus  , largeur = largeur_humerus);
-
-        translate([0,0,L_humerus ]) radius(longueur = L_radius, largeur = largeur_humerus, longueur_humerus = L_humerus );   // Le rayon du coude du coude est proportionnel à la longueur de l'humerus
-
-        translate([0,0,L_humerus ]) cubitus(longueur = L_cubitus, largeur = largeur_humerus, longueur_humerus = L_humerus, longueur_radius = L_radius );   //  Le rayon du coude du coude est proportionnel à la longueur de l'humerus.
-         
-          
-        translate([0,0,L_humerus +L_radius+L_humerus * ratio_coude]) cheville(longueur = L_cheville, largeur = largeur_humerus, longueur_humerus = L_humerus );// le rayon de la cheville est proportionnel à la longueur de l'humerus
-
-       translate([0,0,L_humerus+L_radius+L_humerus * ratio_coude+L_cheville]) rotate([0,0,180]) pied(longueur = longueur_pied, largeur = largeur_humerus, longueur_humerus = L_humerus);// le rayon de la cheville est proportionnel à la longueur de l'humerus
-      };
-//passe_fil();
-        
-
-    };
-    // placement de la roue moteur : 
+epaisseur_bielle_tete =22;
+epaisseur_bielle_coude =8;
+// placement de la roue moteur : 
     // l'abcisse droite de l'épaulement sur le coupleur tete + H roue
     // le rayon de l'épaulement est un millimetre de diam de plus que le diam coupleur. sa hauteur est la moitie du rayon
     Xplus_epaulement = longueur_coupleur_tete/2 + (rayon_coupleur_tete+1)/2;
     // il faut ensuite tabuler à droite la roue moteur : decalage de Hroue = rayon_roue_moteur/4
     // et encore rajouter les minkowski qui débordent de rayon/10 a améliorer donc ajustement
     ajustementX_moteur = 3;
-    ajustementX_servo = 3;
-//translate([Xplus_epaulement+rayon_roue_moteur/4+ajustementX_moteur,jansen_m,0]) roue_moteur(rayon = rayon_roue_moteur);
+    ajustementX_servo = 2;
 
-//translate([Xplus_epaulement+rayon_roue_moteur/4+ajustementX_servo,-jansen_a,0]) roue_servo(rayon = rayon_roue_moteur);
+planX2 = longueur_coupleur_coude/2+epaisseur_bielle_coude/2+ajustementX_servo;
+
+
+
+//humerus, radius, cheville, pied : 
+difference(){
+ union(){
+//        humerus(longueur = L_humerus  , largeur = largeur_humerus);
+
+//        translate([0,0,L_humerus ]) radius(longueur = L_radius, largeur = largeur_humerus, longueur_humerus = L_humerus );   // Le rayon du coude du coude est proportionnel à la longueur de l'humerus
+
+//        translate([0,0,L_humerus ]) cubitus(longueur = L_cubitus, largeur = largeur_humerus, longueur_humerus = L_humerus, longueur_radius = L_radius );   //  Le rayon du coude du coude est proportionnel à la longueur de l'humerus.
+         
+          
+//        translate([0,0,L_humerus +L_radius+L_humerus * ratio_coude]) cheville(longueur = L_cheville, largeur = largeur_humerus, longueur_humerus = L_humerus );// le rayon de la cheville est proportionnel à la longueur de l'humerus
+
+//       translate([0,0,L_humerus+L_radius+L_humerus * ratio_coude+L_cheville]) rotate([0,0,180]) pied(longueur = longueur_pied, largeur = largeur_humerus, longueur_humerus = L_humerus);// le rayon de la cheville est proportionnel à la longueur de l'humerus
+      };
+//passe_fil();
+        
+
+    };
     
-//import("humerus.stl", convexity=3);
-//import("radius_cubitus.stl", convexity=3);
-//import("cheville.stl", convexity=3);
-//import("pied.stl", convexity=3); 
+    
+        
+//    jansen_j();
+    
+    
+    //mecanisme separé de la patte
+//    jansen_c();
+//    jansen_f();
+//    jansen_b_d();
+    
+
+
+
+
+
+//3 pivots jansen_b et jansen-d
+//translate([planX2-4,jansen_a-jansen_m,-jansen_n]) coupleur_coude(rayon = rayon_coupleur_coude, longueur= longueur_coupleur_coude);
+//translate([planX2-4,jansen_d+jansen_a-jansen_m,-jansen_n]) coupleur_coude(rayon = rayon_coupleur_coude, longueur= longueur_coupleur_coude);
+//translate([planX2-4,jansen_a-jansen_m,-jansen_b-jansen_n]) coupleur_coude(rayon = rayon_coupleur_coude, longueur= longueur_coupleur_coude);
+
+// pivot moteur
+//translate([planX2-4+epaisseur_bielle_tete+longueur_coupleur_tete*0,-jansen_m,0]) coupleur_tete(rayon = rayon_coupleur_tete, longueur= longueur_coupleur_tete);
+
+
+//support provisoire
+//translate([planX2+25+epaisseur_bielle_tete+longueur_coupleur_tete/4,-jansen_m+jansen_a/2,-jansen_n/2]) cube([longueur_coupleur_tete/2,jansen_a,jansen_n],center=true);
+//translate([planX2-4+longueur_coupleur_coude,jansen_a-jansen_m,-jansen_n]) coupleur_coude(rayon = rayon_coupleur_coude, longueur= 2.5*longueur_coupleur_coude);
+
+
+//bielle tete
+translate([Xplus_epaulement+15/2+ajustementX_moteur,-jansen_m,0]) bielle(r_axes = rayon_coupleur_tete ,longueur = jansen_m , epaisseur = epaisseur_bielle_tete);
+
+
+    
 
 
